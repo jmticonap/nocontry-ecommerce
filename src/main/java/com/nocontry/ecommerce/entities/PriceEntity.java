@@ -12,22 +12,23 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "product_image")
-public class ProductImagesEntity {
+@Table(name = "price")
+public class PriceEntity {
 
     @Id
     @SequenceGenerator(
-            name = "productimg_id_sequence",
-            sequenceName = "productimg_id_sequence"
+            name = "price_id_sequence",
+            sequenceName = "price_id_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "productimg_id_sequence"
+            generator = "price_id_sequence"
     )
     private Long id;
+    private Double value;
+    private Boolean isActive;
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false, updatable = false)
     private ProductEntity product;
-    private String path;
 
 }

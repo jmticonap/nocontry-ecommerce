@@ -6,28 +6,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "product_image")
-public class ProductImagesEntity {
+@Table(name = "feature")
+public class FeatureEntity {
 
     @Id
     @SequenceGenerator(
-            name = "productimg_id_sequence",
-            sequenceName = "productimg_id_sequence"
+            name = "feature_id_sequence",
+            sequenceName = "feature_id_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "productimg_id_sequence"
+            generator = "feature_id_sequence"
     )
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false, updatable = false)
-    private ProductEntity product;
-    private String path;
+    private String name;
+    @ManyToMany(mappedBy = "features")
+    private List<ProductEntity> products;
 
 }

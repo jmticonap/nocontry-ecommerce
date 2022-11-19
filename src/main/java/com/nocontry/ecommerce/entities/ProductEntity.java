@@ -28,7 +28,19 @@ public class ProductEntity {
     private Long id;
     private String name;
     private String description;
-    @OneToMany
+    @OneToMany(mappedBy = "product")
     private List<ProductImagesEntity> images;
+    @OneToMany(mappedBy = "product")
+    private List<BuyEntity> buys;
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false, updatable = false)
+    private CategoryEntity category;
+    @ManyToMany
+    @JoinTable(
+            name = "product_feature",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "feature_id")
+    )
+    private List<FeatureEntity> features;
 
 }

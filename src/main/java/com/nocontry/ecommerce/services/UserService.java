@@ -30,9 +30,13 @@ public class UserService {
         return roleRepo.save(role);
     }
 
-    public void addRoleToUser(String username, String rolename){
-        log.info("Adding role:{} into user:{}", rolename, username);
-        AppUser user = userRepo.findByEmail(username).get();
+    public void addRoleToUser(String email, String rolename){
+        log.info("Adding role:{} into user:{}", rolename, email);
+        AppUser user = null;
+        if(userRepo.existsByEmail(email)){
+            user = userRepo.findByEmail(email).get();
+        }
+
         Role role = roleRepo.findByName(rolename);
         user.getRoles().add(role); // for @Transactional annotation this save into DB
     }

@@ -1,6 +1,7 @@
 package com.nocontry.ecommerce.entities;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,9 +14,11 @@ import java.util.Collection;
  */
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "appuser")
 public class AppUser {
 
     @Id
@@ -32,6 +35,14 @@ public class AppUser {
     private String email;
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "product_role",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private Collection<Role> roles = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    private UserProfileEntity profile;
 
 }

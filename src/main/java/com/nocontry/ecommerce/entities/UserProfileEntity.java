@@ -12,22 +12,22 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "product_image")
-public class ProductImagesEntity {
+@Table(name = "userprofile")
+public class UserProfileEntity {
 
     @Id
     @SequenceGenerator(
-            name = "productimg_id_sequence",
-            sequenceName = "productimg_id_sequence"
+            name = "userprofile_id_sequence",
+            sequenceName = "userprofile_id_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "productimg_id_sequence"
+            generator = "userprofile_id_sequence"
     )
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false, updatable = false)
-    private ProductEntity product;
-    private String path;
+    private String firstname;
+    private String lastname;
+    @OneToOne(mappedBy = "profile")
+    private AppUser user;
 
 }
