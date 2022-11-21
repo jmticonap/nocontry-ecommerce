@@ -36,8 +36,8 @@ public class AppUser {
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "product_role",
-            joinColumns = @JoinColumn(name = "product_id"),
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Collection<Role> roles = new ArrayList<>();
