@@ -4,9 +4,9 @@ import com.nocontry.ecommerce.dto.AuthCredentials;
 import com.nocontry.ecommerce.dto.AuthResponse;
 import com.nocontry.ecommerce.dto.RegisterDto;
 import com.nocontry.ecommerce.entities.AppUser;
-import com.nocontry.ecommerce.entities.Role;
-import com.nocontry.ecommerce.repositories.RoleRepo;
-import com.nocontry.ecommerce.repositories.UserRepo;
+import com.nocontry.ecommerce.entities.RoleEntity;
+import com.nocontry.ecommerce.repositories.RoleRepository;
+import com.nocontry.ecommerce.repositories.UserRepository;
 import com.nocontry.ecommerce.security.TokenUtils;
 import com.nocontry.ecommerce.security.UserDetailsImpl;
 import lombok.AllArgsConstructor;
@@ -31,8 +31,8 @@ import java.util.Collections;
 public class AuthController {
 
     private AuthenticationManager authenticationManager;
-    private UserRepo userRepo;
-    private RoleRepo roleRepo;
+    private UserRepository userRepo;
+    private RoleRepository roleRepo;
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
@@ -66,8 +66,8 @@ public class AuthController {
                         .encode(registerDto.getPassword())
         );
 
-        Role role = roleRepo.findByName("ROLE_USER");
-        user.setRoles(Collections.singletonList(role));
+        RoleEntity roleEntity = roleRepo.findByName("ROLE_USER");
+        user.setRoleEntities(Collections.singletonList(roleEntity));
 
         userRepo.save(user);
 
