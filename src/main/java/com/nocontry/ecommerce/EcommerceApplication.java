@@ -21,23 +21,43 @@ public class EcommerceApplication {
 	@Bean
 	CommandLineRunner run(UserService userService){
 		return args -> {
-			userService.saveRole(new Role(null,"ROLE_USER"));
-			userService.saveRole(new Role(null,"ROLE_MANAGER"));
-			userService.saveRole(new Role(null,"ROLE_ADMIN"));
-			userService.saveRole(new Role(null,"ROLE_SUPER_ADMIN"));
+			userService.saveRole(new Role(null,"ROLE_USER",null));
+			userService.saveRole(new Role(null,"ROLE_MANAGER",null));
+			userService.saveRole(new Role(null,"ROLE_ADMIN",null));
+			userService.saveRole(new Role(null,"ROLE_SUPER_ADMIN",null));
 
-			userService.saveUser(new AppUser(null,"Donovan Ian","donovan",new BCryptPasswordEncoder().encode("1234"),new ArrayList<>()));
-			userService.saveUser(new AppUser(null,"Mia Mauren","mia",new BCryptPasswordEncoder().encode("1234"),new ArrayList<>()));
-			userService.saveUser(new AppUser(null,"Will Smith","will",new BCryptPasswordEncoder().encode("1234"),new ArrayList<>()));
-			userService.saveUser(new AppUser(null,"Juan Manuel","juancho",new BCryptPasswordEncoder().encode("1234"),new ArrayList<>()));
+			AppUser donovan = AppUser.builder()
+					.name("Donovan Ian")
+					.email("donovan@gmail.com")
+					.password(new BCryptPasswordEncoder().encode("1234"))
+					.build();
+			AppUser mia = AppUser.builder()
+					.name("Mia Mauren")
+					.email("mia@gmail.com")
+					.password(new BCryptPasswordEncoder().encode("1234"))
+					.build();
+			AppUser will = AppUser.builder()
+					.name("Will Smith")
+					.email("will@gmail.com")
+					.password(new BCryptPasswordEncoder().encode("1234"))
+					.build();
+			AppUser juan = AppUser.builder()
+					.name("Juan Manuel")
+					.email("jm@gmail.com")
+					.password(new BCryptPasswordEncoder().encode("1234"))
+					.build();
+			userService.saveUser(donovan);
+			userService.saveUser(mia);
+			userService.saveUser(will);
+			userService.saveUser(juan);
 
-			userService.addRoleToUser("donovan","ROLE_USER");
-			userService.addRoleToUser("mia","ROLE_MANAGER");
-			userService.addRoleToUser("will","ROLE_ADMIN");
-			userService.addRoleToUser("juancho","ROLE_SUPER_ADMIN");
-			userService.addRoleToUser("juancho","ROLE_ADMIN");
-			userService.addRoleToUser("juancho","ROLE_MANAGER");
-			userService.addRoleToUser("juancho","ROLE_USER");
+			userService.addRoleToUser("donovan@gmail.com","ROLE_USER");
+			userService.addRoleToUser("mia@gmail.com","ROLE_MANAGER");
+			userService.addRoleToUser("will@gmail.com","ROLE_ADMIN");
+			userService.addRoleToUser("jm@gmail.com","ROLE_SUPER_ADMIN");
+			userService.addRoleToUser("jm@gmail.com","ROLE_ADMIN");
+			userService.addRoleToUser("jm@gmail.com","ROLE_MANAGER");
+			userService.addRoleToUser("jm@gmail.com","ROLE_USER");
 		};
 	}
 
