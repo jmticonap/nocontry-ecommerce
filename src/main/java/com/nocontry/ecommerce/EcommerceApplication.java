@@ -1,15 +1,13 @@
 package com.nocontry.ecommerce;
 
 import com.nocontry.ecommerce.entities.AppUser;
-import com.nocontry.ecommerce.entities.Role;
+import com.nocontry.ecommerce.entities.RoleEntity;
 import com.nocontry.ecommerce.services.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.ArrayList;
 
 @SpringBootApplication
 public class EcommerceApplication {
@@ -21,10 +19,10 @@ public class EcommerceApplication {
 	@Bean
 	CommandLineRunner run(UserService userService){
 		return args -> {
-			userService.saveRole(new Role(null,"ROLE_USER",null));
-			userService.saveRole(new Role(null,"ROLE_MANAGER",null));
-			userService.saveRole(new Role(null,"ROLE_ADMIN",null));
-			userService.saveRole(new Role(null,"ROLE_SUPER_ADMIN",null));
+			userService.saveRole(new RoleEntity(null,"ROLE_USER",null));
+			userService.saveRole(new RoleEntity(null,"ROLE_MANAGER",null));
+			userService.saveRole(new RoleEntity(null,"ROLE_ADMIN",null));
+			userService.saveRole(new RoleEntity(null,"ROLE_SUPER_ADMIN",null));
 
 			AppUser donovan = AppUser.builder()
 					.name("Donovan Ian")

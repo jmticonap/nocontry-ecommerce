@@ -1,7 +1,7 @@
 package com.nocontry.ecommerce.controllers;
 
 import com.nocontry.ecommerce.entities.AppUser;
-import com.nocontry.ecommerce.entities.Role;
+import com.nocontry.ecommerce.entities.RoleEntity;
 import com.nocontry.ecommerce.services.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +31,9 @@ public class UserResource {
     }
 
     @PostMapping("/role")
-    public ResponseEntity<Role> saveRole(@RequestBody Role role){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveRole(role));
+    public ResponseEntity<RoleEntity> saveRole(@RequestBody RoleEntity roleEntity){
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/roleEntity").toUriString());
+        return ResponseEntity.created(uri).body(userService.saveRole(roleEntity));
     }
 
     @PostMapping("/role/addtouser")

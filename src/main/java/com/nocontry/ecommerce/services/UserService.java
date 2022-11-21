@@ -1,9 +1,9 @@
 package com.nocontry.ecommerce.services;
 
 import com.nocontry.ecommerce.entities.AppUser;
-import com.nocontry.ecommerce.entities.Role;
-import com.nocontry.ecommerce.repositories.RoleRepo;
-import com.nocontry.ecommerce.repositories.UserRepo;
+import com.nocontry.ecommerce.entities.RoleEntity;
+import com.nocontry.ecommerce.repositories.RoleRepository;
+import com.nocontry.ecommerce.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,28 +17,28 @@ import java.util.List;
 @Slf4j
 public class UserService {
 
-    private UserRepo userRepo;
-    private RoleRepo roleRepo;
+    private UserRepository userRepo;
+    private RoleRepository roleRepo;
 
     public AppUser saveUser(AppUser user){
         log.info("Saving new user into DB");
         return userRepo.save(user);
     }
 
-    public Role saveRole(Role role){
-        log.info("Saving new role into DB");
-        return roleRepo.save(role);
+    public RoleEntity saveRole(RoleEntity roleEntity){
+        log.info("Saving new roleEntity into DB");
+        return roleRepo.save(roleEntity);
     }
 
     public void addRoleToUser(String email, String rolename){
-        log.info("Adding role:{} into user:{}", rolename, email);
+        log.info("Adding roleEntity:{} into user:{}", rolename, email);
         AppUser user = null;
         if(userRepo.existsByEmail(email)){
             user = userRepo.findByEmail(email).get();
         }
 
-        Role role = roleRepo.findByName(rolename);
-        user.getRoles().add(role); // for @Transactional annotation this save into DB
+        RoleEntity roleEntity = roleRepo.findByName(rolename);
+        user.getRoleEntities().add(roleEntity); // for @Transactional annotation this save into DB
     }
 
     public AppUser getUser(String username){
