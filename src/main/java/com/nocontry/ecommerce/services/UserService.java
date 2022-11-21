@@ -41,6 +41,11 @@ public class UserService {
         user.getRoles().add(role); // for @Transactional annotation this save into DB
     }
 
+    public AppUser getById(Long id){
+        log.info("Getting user data.");
+        return userRepo.getReferenceById(id);
+    }
+
     public AppUser getUser(String username){
         log.info("Getting user:{}", username);
         return userRepo.findByEmail(username).get();
