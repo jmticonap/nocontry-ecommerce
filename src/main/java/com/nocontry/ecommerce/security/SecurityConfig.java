@@ -39,11 +39,8 @@ public class SecurityConfig {
                         "/swagger-ui/**",
                         "/api-docs/**"
                 ).permitAll()
-                .antMatchers(
-                        "/api/v1/product",
-                        "/api/v1/product/*"
-                )//.permitAll()
-                .hasAnyRole("ROLE_USER", "ROLE_MANAGER")
+                .antMatchers("/api/v1/product/**")
+                .hasAnyRole("USER", "MANAGER") //Role names goes without "ROLE_" string
 
                 //PERMITE TODO
                 //.antMatchers( "/**").permitAll()
