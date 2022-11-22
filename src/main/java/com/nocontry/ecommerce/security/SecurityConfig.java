@@ -31,19 +31,20 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
 
-                //FILTRA TODO
+
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/").permitAll()
+                //FILTRA TODO
+                /*.antMatchers(HttpMethod.GET, "/").permitAll()
                 .antMatchers(
                         "/api/v1/auth/**",
                         "/swagger-ui/**",
                         "/api-docs/**"
                 ).permitAll()
                 .antMatchers("/api/v1/product/**")
-                .hasAnyRole("USER", "MANAGER") //Role names goes without "ROLE_" string
+                .hasAnyRole("USER", "MANAGER") //Role names goes without "ROLE_" string*/
 
                 //PERMITE TODO
-                //.antMatchers( "/**").permitAll()
+                .antMatchers( "/**").permitAll()
 
 
                 .anyRequest()

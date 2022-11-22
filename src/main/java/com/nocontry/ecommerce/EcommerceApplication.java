@@ -7,6 +7,9 @@ import com.nocontry.ecommerce.entities.Role;
 import com.nocontry.ecommerce.repositories.CategoryRepository;
 import com.nocontry.ecommerce.services.ProductService;
 import com.nocontry.ecommerce.services.UserService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +17,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
+@OpenAPIDefinition(
+		info = @Info(
+				title = "Apply Default Global SecurityScheme in springdoc-openapi",
+				version = "1.0.0"
+		),
+		security = { @SecurityRequirement(name = "api_key") }
+)
 public class EcommerceApplication {
 
 	public static void main(String[] args) {
