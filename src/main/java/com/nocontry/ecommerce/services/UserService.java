@@ -46,9 +46,9 @@ public class UserService {
         return userRepo.getReferenceById(id);
     }
 
-    public AppUser getUser(String username){
-        log.info("Getting user:{}", username);
-        return userRepo.findByEmail(username).get();
+    public AppUser getUser(String email){
+        log.info("Getting user:{}", email);
+        return userRepo.findByEmail(email).get();
     }
 
     public List<AppUser> getUsers(){

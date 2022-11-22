@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -25,9 +24,6 @@ public class Role implements GrantedAuthority {
     )
     private Long id;
     private String name;
-
-    @ManyToMany(mappedBy = "roles")
-    private List<AppUser> users;
 
     @Transient
     @Override

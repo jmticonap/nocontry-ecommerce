@@ -2,6 +2,8 @@ package com.nocontry.ecommerce.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nocontry.ecommerce.dto.AuthCredentials;
+import com.nocontry.ecommerce.entities.AppUser;
+import com.nocontry.ecommerce.entities.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 
 @Slf4j
@@ -24,10 +27,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletResponse response) {
 
         AuthCredentials authCredentials = new AuthCredentials();
-        try{
+        try {
             authCredentials = new ObjectMapper()
                     .readValue(request.getReader(), AuthCredentials.class);
-        } catch (IOException e){
+        } catch (IOException e) {
             log.error(e.getMessage());
         }
 
@@ -36,7 +39,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 authCredentials.getPassword(),
                 Collections.emptyList()
         );
-        log.info( usernamePAT.toString() );
+        log.info(usernamePAT.toString());
         return getAuthenticationManager().authenticate(usernamePAT);
     }
 
@@ -63,7 +66,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletResponse response,
             AuthenticationException failed) throws IOException, ServletException {
 
-        log.error( failed.getMessage() );
+        log.error(failed.getMessage());
 
         super.unsuccessfulAuthentication(request, response, failed);
     }

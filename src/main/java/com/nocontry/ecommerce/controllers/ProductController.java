@@ -3,7 +3,7 @@ package com.nocontry.ecommerce.controllers;
 import com.nocontry.ecommerce.entities.ProductEntity;
 import com.nocontry.ecommerce.services.ProductService;
 import com.nocontry.ecommerce.dto.ProductTdo;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/product")
-@RequiredArgsConstructor
+@AllArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProductController {
 

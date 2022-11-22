@@ -9,8 +9,18 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
+    /**
+     *
+     * @param category
+     * @return List<ProductEntity>
+     */
     List<ProductEntity> findByCategory(CategoryEntity category);
 
-    List<ProductEntity> findByFeatures(List<FeatureEntity> features);
+    /**
+     *
+     * @param features
+     * @return List<ProductEntity>
+     */
+    List<ProductEntity> findByFeatures(FeatureEntity[] features);
 
 }

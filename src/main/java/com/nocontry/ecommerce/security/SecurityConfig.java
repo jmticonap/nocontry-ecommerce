@@ -25,6 +25,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
                 .cors()
                 .and()
@@ -33,13 +34,19 @@ public class SecurityConfig {
                 //FILTRA TODO
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/").permitAll()
-                .antMatchers("/api/v1/auth/**").permitAll()
-                //.antMatchers("/api/v1/product**").hasAnyRole("ROLE_USER", "ROLE_MANAGER")
-                .antMatchers("/swagger-ui/**", "/api-docs/**").permitAll()///api-docs
+                .antMatchers(
+                        "/api/v1/auth/**",
+                        "/swagger-ui/**",
+                        "/api-docs/**"
+                ).permitAll()
+                .antMatchers(
+                        "/api/v1/product",
+                        "/api/v1/product/*"
+                )//.permitAll()
+                .hasAnyRole("ROLE_USER", "ROLE_MANAGER")
 
                 //PERMITE TODO
                 //.antMatchers( "/**").permitAll()
-
 
 
                 .anyRequest()

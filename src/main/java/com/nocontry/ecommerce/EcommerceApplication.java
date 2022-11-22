@@ -13,8 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.ArrayList;
-
 @SpringBootApplication
 public class EcommerceApplication {
 
@@ -25,10 +23,10 @@ public class EcommerceApplication {
 	@Bean
 	CommandLineRunner run(UserService userService, CategoryRepository categoryRepository, ProductService productService){
 		return args -> {
-			userService.saveRole(new Role(null,"ROLE_USER",null));
-			userService.saveRole(new Role(null,"ROLE_MANAGER",null));
-			userService.saveRole(new Role(null,"ROLE_ADMIN",null));
-			userService.saveRole(new Role(null,"ROLE_SUPER_ADMIN",null));
+			userService.saveRole(new Role(null,"ROLE_USER"));
+			userService.saveRole(new Role(null,"ROLE_MANAGER"));
+			userService.saveRole(new Role(null,"ROLE_ADMIN"));
+			userService.saveRole(new Role(null,"ROLE_SUPER_ADMIN"));
 
 			AppUser donovan = AppUser.builder()
 					.name("Donovan Ian")
@@ -81,7 +79,7 @@ public class EcommerceApplication {
 							.name("tech")
 							.build()
 			);
-			categoryRepository.flush();
+
 
 			productService.save(
 					ProductEntity.builder()

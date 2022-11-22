@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
     private UserRepo userRepo;
 
     @Override

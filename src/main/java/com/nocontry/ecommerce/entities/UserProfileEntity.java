@@ -27,7 +27,9 @@ public class UserProfileEntity {
     private Long id;
     private String firstname;
     private String lastname;
-    @OneToOne(mappedBy = "profile")
+
+    @OneToOne
+    @JoinColumn(name = "appuser_id")
     private AppUser user;
 
 }

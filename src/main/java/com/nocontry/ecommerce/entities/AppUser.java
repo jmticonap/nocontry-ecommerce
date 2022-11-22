@@ -1,5 +1,6 @@
 package com.nocontry.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @Entity
 @Table(name = "appuser")
+@JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer", "FieldHandler"})
 public class AppUser {
 
     @Id
@@ -31,19 +33,23 @@ public class AppUser {
             generator = "appuser_id_sequence"
     )
     private Long id;
+
+    @Column(unique = true)
     private String name;
+
     @Column(unique = true)
     private String email;
+
+    @Column(nullable = false, updatable = true)
     private String password;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
+            name = "appuser_role",
+            joinColumns = {@JoinColumn(name = "appuser_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private Collection<Role> roles = new ArrayList<>();
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private UserProfileEntity profile;
 
 }
+

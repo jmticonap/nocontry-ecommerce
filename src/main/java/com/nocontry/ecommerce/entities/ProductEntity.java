@@ -32,9 +32,11 @@ public class    ProductEntity {
     private List<ProductImagesEntity> images;
     @OneToMany(mappedBy = "product")
     private List<BuyEntity> buys;
+
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false, updatable = false)
+    @JoinColumn(name = "category_id", nullable = false, updatable = false, referencedColumnName = "id")
     private CategoryEntity category;
+
     @ManyToMany
     @JoinTable(
             name = "product_feature",

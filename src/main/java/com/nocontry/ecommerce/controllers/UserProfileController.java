@@ -5,7 +5,6 @@ import com.nocontry.ecommerce.entities.UserProfileEntity;
 import com.nocontry.ecommerce.services.UserProfileService;
 import com.nocontry.ecommerce.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +31,6 @@ public class UserProfileController {
                 UserProfileEntity.builder()
                         .firstname(user.getFirstname())
                         .lastname(user.getLastname())
-                        .user(
-                                userService.getById(user.getUserId())
-                        )
                         .build()),
                 HttpStatus.OK
         );

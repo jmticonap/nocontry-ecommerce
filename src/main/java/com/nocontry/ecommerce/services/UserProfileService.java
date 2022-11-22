@@ -1,6 +1,5 @@
 package com.nocontry.ecommerce.services;
 
-import com.nocontry.ecommerce.entities.AppUser;
 import com.nocontry.ecommerce.entities.UserProfileEntity;
 import com.nocontry.ecommerce.repositories.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +24,5 @@ public class UserProfileService {
         return userProfileRepository.findAll();
     }
 
-    public UserProfileEntity getByUser(AppUser user){
-        log.info("Get profile for specific AppUser");
-        return userProfileRepository.getByUser(user);
-    }
 
 }

@@ -1,5 +1,6 @@
 package com.nocontry.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,9 +28,12 @@ public class CategoryEntity {
     )
     private Long id;
     private String name;
-    @ManyToOne
-    private CategoryEntity parent;
-    @OneToMany(targetEntity = ProductEntity.class, cascade = CascadeType.ALL, mappedBy = "category")
-    private List<ProductEntity> products;
+    /*@ManyToOne(optional = true)
+    @JoinColumn(name = "parent_id", referencedColumnName = "id", nullable = true)
+    @JsonBackReference
+    private CategoryEntity parent;*/
+
+    /*@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
+    private List<ProductEntity> products;*/
 
 }
