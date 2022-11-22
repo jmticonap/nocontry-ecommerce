@@ -2,6 +2,10 @@ package com.nocontry.ecommerce;
 
 import com.nocontry.ecommerce.entities.AppUser;
 import com.nocontry.ecommerce.entities.RoleEntity;
+import com.nocontry.ecommerce.entities.CategoryEntity;
+import com.nocontry.ecommerce.entities.ProductEntity;
+import com.nocontry.ecommerce.repositories.CategoryRepository;
+import com.nocontry.ecommerce.services.ProductService;
 import com.nocontry.ecommerce.services.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,7 +21,7 @@ public class EcommerceApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(UserService userService){
+	CommandLineRunner run(UserService userService, CategoryRepository categoryRepository, ProductService productService){
 		return args -> {
 			userService.saveRole(new RoleEntity(null,"ROLE_USER",null));
 			userService.saveRole(new RoleEntity(null,"ROLE_MANAGER",null));
@@ -56,6 +60,34 @@ public class EcommerceApplication {
 			userService.addRoleToUser("jm@gmail.com","ROLE_ADMIN");
 			userService.addRoleToUser("jm@gmail.com","ROLE_MANAGER");
 			userService.addRoleToUser("jm@gmail.com","ROLE_USER");
+
+			/**
+			 *
+			 */
+			categoryRepository.save(
+					CategoryEntity.builder()
+							.name("Generic")
+							.build()
+			);
+			categoryRepository.save(
+					CategoryEntity.builder()
+							.name("audio")
+							.build()
+			);
+			categoryRepository.save(
+					CategoryEntity.builder()
+							.name("tech")
+							.build()
+			);
+			categoryRepository.flush();
+
+			productService.save(
+					ProductEntity.builder()
+							.name("Lenovo ideapad 5")
+							.description("Laptop ideapad 5 core i7")
+							.category(categoryRepository.getByName("tech"))
+							.build()
+			);
 		};
 	}
 

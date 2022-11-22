@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "product")
-public class ProductEntity {
+public class    ProductEntity {
 
     @Id
     @SequenceGenerator(
