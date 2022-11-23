@@ -2,7 +2,7 @@ package com.nocontry.ecommerce.services;
 
 import com.nocontry.ecommerce.entities.UserProfileEntity;
 import com.nocontry.ecommerce.repositories.UserProfileRepository;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserProfileService {
 
     private final UserProfileRepository userProfileRepository;

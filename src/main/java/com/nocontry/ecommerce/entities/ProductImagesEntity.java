@@ -25,9 +25,8 @@ public class ProductImagesEntity {
             generator = "productimg_id_sequence"
     )
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false, updatable = false)
-    private ProductEntity product;
     private String path;
+    @Column(name = "product_id")
+    private Long productId;
 
 }

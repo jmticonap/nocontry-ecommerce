@@ -27,7 +27,6 @@ public class FeatureEntity {
     )
     private Long id;
     private String name;
-    @ManyToMany(mappedBy = "features")
-    private List<ProductEntity> products;
+
 
 }

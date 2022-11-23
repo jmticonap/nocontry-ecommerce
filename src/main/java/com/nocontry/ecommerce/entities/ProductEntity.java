@@ -1,11 +1,13 @@
 package com.nocontry.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -14,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "product")
-public class    ProductEntity {
+public class ProductEntity {
 
     @Id
     @SequenceGenerator(
@@ -26,23 +28,31 @@ public class    ProductEntity {
             generator = "product_id_sequence"
     )
     private Long id;
+
     private String name;
+
     private String description;
+
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<ProductImagesEntity> images = new ArrayList<>();
+
     @OneToMany(mappedBy = "product")
-    private List<ProductImagesEntity> images;
-    @OneToMany(mappedBy = "product")
-    private List<BuyEntity> buys;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<BuyEntity> buys = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false, updatable = false, referencedColumnName = "id")
+    @JoinColumn(name = "category_id", nullable = true, referencedColumnName = "id")
     private CategoryEntity category;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "product_feature",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "feature_id")
     )
-    private List<FeatureEntity> features;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<FeatureEntity> features = new ArrayList<>();
 
 }
