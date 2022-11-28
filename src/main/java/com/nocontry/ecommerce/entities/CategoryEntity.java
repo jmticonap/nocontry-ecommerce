@@ -1,6 +1,7 @@
 package com.nocontry.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,13 +28,17 @@ public class CategoryEntity {
             generator = "category_id_sequence"
     )
     private Long id;
+
     private String name;
+
     /*@ManyToOne(optional = true)
     @JoinColumn(name = "parent_id", referencedColumnName = "id", nullable = true)
     @JsonBackReference
     private CategoryEntity parent;*/
 
-    /*@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
-    private List<ProductEntity> products;*/
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<ProductEntity> products;
 
 }

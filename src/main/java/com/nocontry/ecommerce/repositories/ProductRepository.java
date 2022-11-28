@@ -11,10 +11,10 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     /**
      *
-     * @param category
+     * @param categoryId
      * @return List<ProductEntity>
      */
-    List<ProductEntity> findByCategory(CategoryEntity category);
+    List<ProductEntity> findByCategoryId(Long categoryId);
 
     /**
      *

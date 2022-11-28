@@ -3,6 +3,7 @@ package com.nocontry.ecommerce.services;
 import com.nocontry.ecommerce.entities.FeatureEntity;
 import com.nocontry.ecommerce.entities.ProductEntity;
 import com.nocontry.ecommerce.entities.ProductImagesEntity;
+import com.nocontry.ecommerce.repositories.CategoryRepository;
 import com.nocontry.ecommerce.repositories.FeatureRepository;
 import com.nocontry.ecommerce.repositories.ProductImagesRepository;
 import com.nocontry.ecommerce.repositories.ProductRepository;
@@ -22,6 +23,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final FeatureRepository featureRepository;
     private final ProductImagesRepository productImagesRepository;
+    private final CategoryRepository categoryRepository;
 
     public ProductEntity save(ProductEntity product) throws Exception {
         try {
@@ -41,7 +43,18 @@ public class ProductService {
     }
 
     public List<ProductEntity> findAll() {
-        return productRepository.findAll();
+        List<ProductEntity> products = productRepository.findAll();
+        //TODO: load category data
+        return products;
+    }
+
+    public ProductEntity findById(Long id) throws Exception {
+        try {
+            return productRepository.getReferenceById(id);
+        } catch (Exception err) {
+            log.error(err.getMessage());
+            throw new Exception(err.getMessage());
+        }
     }
 
     public void delete(ProductEntity product) {

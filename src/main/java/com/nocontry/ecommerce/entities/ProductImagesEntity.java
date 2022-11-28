@@ -26,6 +26,7 @@ public class ProductImagesEntity {
     )
     private Long id;
     private String path;
+
     @Column(name = "product_id")
     private Long productId;
 

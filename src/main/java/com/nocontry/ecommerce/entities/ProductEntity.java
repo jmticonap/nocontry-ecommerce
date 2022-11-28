@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "product")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class ProductEntity {
 
     @Id
@@ -42,9 +43,8 @@ public class ProductEntity {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<BuyEntity> buys = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = true, referencedColumnName = "id")
-    private CategoryEntity category;
+    @Column(name = "category_id")
+    private Long categoryId;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(

@@ -5,6 +5,7 @@ import com.nocontry.ecommerce.entities.Role;
 import com.nocontry.ecommerce.services.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -13,7 +14,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class UserResource {
 
@@ -24,11 +25,6 @@ public class UserResource {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
-    @PostMapping("/user")
-    public ResponseEntity<AppUser> saveUser(@RequestBody AppUser user){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveUser(user));
-    }
 
     @PostMapping("/role")
     public ResponseEntity<Role> saveRole(@RequestBody Role role){

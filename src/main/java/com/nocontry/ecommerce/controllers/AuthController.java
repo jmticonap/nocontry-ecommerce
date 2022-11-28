@@ -69,7 +69,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
         if (userRepo.existsByEmail(registerDto.getEmail())) {
             return new ResponseEntity<>("This user already taken", HttpStatus.BAD_REQUEST);
         }
@@ -88,7 +88,7 @@ public class AuthController {
 
         String log_message = String.format("User %s registered success", user.getName());
         log.info(log_message);
-        return new ResponseEntity<>(log_message, HttpStatus.CREATED);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @GetMapping("/user/{id}")

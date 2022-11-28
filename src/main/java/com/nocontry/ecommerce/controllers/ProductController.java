@@ -1,15 +1,12 @@
 package com.nocontry.ecommerce.controllers;
 
-import com.nocontry.ecommerce.entities.FeatureEntity;
 import com.nocontry.ecommerce.entities.ProductEntity;
 import com.nocontry.ecommerce.services.ProductService;
-import com.nocontry.ecommerce.dto.ProductTdo;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,6 +20,15 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductEntity>> findAll() {
         return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductEntity> findById(@PathVariable(name = "id") Long id) {
+        try {
+            return new ResponseEntity<>(productService.findById(id), HttpStatus.OK);
+        } catch (Exception err) {
+            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        }
     }
 
 /*    @PostMapping

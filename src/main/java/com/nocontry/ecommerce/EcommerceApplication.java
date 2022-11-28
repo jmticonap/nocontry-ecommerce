@@ -100,21 +100,21 @@ public class EcommerceApplication {
                     ProductEntity.builder()
                             .name("Lenovo ideapad 5")
                             .description("Laptop ideapad 5 core i7")
-                            .category(categoryRepository.getByName("tech"))
+                            .categoryId(categoryRepository.getByName("tech").getId())
                             .build()
             );
             productService.save(
                     ProductEntity.builder()
                             .name("Ipad Prod")
                             .description("Ipad pro gray")
-                            .category(categoryRepository.getByName("tech"))
+                            .categoryId(categoryRepository.getByName("tech").getId())
                             .build()
             );
             productService.save(
                     ProductEntity.builder()
                             .name("Xiaomi Redmi 8")
                             .description("Xiaomi Redmi 8")
-                            .category(categoryRepository.getByName("tech"))
+                            .categoryId(categoryRepository.getByName("tech").getId())
                             .build()
             );
             productService.save(
