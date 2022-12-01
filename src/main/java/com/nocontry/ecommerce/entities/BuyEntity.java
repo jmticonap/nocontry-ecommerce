@@ -1,5 +1,8 @@
 package com.nocontry.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +16,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "buy")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class BuyEntity {
 
     @Id
@@ -25,8 +30,10 @@ public class BuyEntity {
             generator = "buy_id_sequence"
     )
     private Long id;
+
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false, updatable = false)
     private ProductEntity product;
+
+    @Column(name = "quantity", nullable = false, updatable = false)
     private Double quantity;
 }

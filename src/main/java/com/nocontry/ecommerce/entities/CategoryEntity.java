@@ -1,13 +1,11 @@
 package com.nocontry.ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.*;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -16,7 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "category")
-public class CategoryEntity {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
+public class CategoryEntity implements Serializable {
 
     @Id
     @SequenceGenerator(
@@ -36,9 +36,7 @@ public class CategoryEntity {
     @JsonBackReference
     private CategoryEntity parent;*/
 
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<ProductEntity> products;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
+    private List<ProductEntity> products = new ArrayList<>();
 
 }

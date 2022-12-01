@@ -1,5 +1,8 @@
 package com.nocontry.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +16,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "product_image")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ProductImagesEntity {
 
     @Id
@@ -27,7 +32,7 @@ public class ProductImagesEntity {
     private Long id;
     private String path;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @ManyToOne
+    private ProductEntity product;
 
 }

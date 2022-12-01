@@ -6,9 +6,9 @@ spring:
     name: ecommerce
 
   datasource:
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
+    username: postgres
+    password: password
+    url: jdbc:postgresql://localhost:5432/ecomerce_api
   jpa:
     hibernate:
       ddl-auto: create-drop

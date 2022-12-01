@@ -1,5 +1,6 @@
 package com.nocontry.ecommerce.services;
 
+import com.nocontry.ecommerce.entities.CategoryEntity;
 import com.nocontry.ecommerce.entities.FeatureEntity;
 import com.nocontry.ecommerce.entities.ProductEntity;
 import com.nocontry.ecommerce.entities.ProductImagesEntity;
@@ -8,15 +9,20 @@ import com.nocontry.ecommerce.repositories.FeatureRepository;
 import com.nocontry.ecommerce.repositories.ProductImagesRepository;
 import com.nocontry.ecommerce.repositories.ProductRepository;
 import com.nocontry.ecommerce.dto.ProductTdo;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Slf4j
 public class ProductService {
 
@@ -25,13 +31,8 @@ public class ProductService {
     private final ProductImagesRepository productImagesRepository;
     private final CategoryRepository categoryRepository;
 
-    public ProductEntity save(ProductEntity product) throws Exception {
-        try {
-            return productRepository.save(product);
-        } catch (Exception err) {
-            log.error(err.getMessage());
-            throw new Exception(err.getMessage());
-        }
+    public Optional<ProductEntity> save(ProductEntity product) {
+        return Optional.of(productRepository.save(product));
     }
 
     public ProductEntity save(ProductTdo product) throws Exception {
@@ -39,31 +40,25 @@ public class ProductService {
         return save(ProductEntity.builder()
                 .name(product.getName())
                 .description(product.getDescription())
-                .build());
+                .build()).get();
     }
 
-    public List<ProductEntity> findAll() {
-        List<ProductEntity> products = productRepository.findAll();
-        //TODO: load category data
+    public List<ProductEntity> findAll(Pageable pageable) {
+        List<ProductEntity> products = productRepository.findAll(pageable).toList();
+
         return products;
     }
 
-    public ProductEntity findById(Long id) throws Exception {
-        try {
-            return productRepository.getReferenceById(id);
-        } catch (Exception err) {
-            log.error(err.getMessage());
-            throw new Exception(err.getMessage());
-        }
+    public Optional<ProductEntity> findById(Long id) {
+        return productRepository.findById(id);
+    }
+
+    public List<ProductEntity> findByCategory(CategoryEntity category, Pageable pageable){
+        return productRepository.findByCategory(category, pageable);
     }
 
     public void delete(ProductEntity product) {
-        try {
-            productRepository.delete(product);
-        } catch (Exception err) {
-            log.error(err.getMessage());
-        }
-
+        productRepository.delete(product);
     }
 
 
@@ -76,7 +71,7 @@ public class ProductService {
             });
             product.getImages().addAll(images);
 
-            return save(product);
+            return save(product).get();
         } catch (Exception err) {
             log.error(err.getMessage());
             throw new Exception(err.getMessage());
@@ -92,7 +87,7 @@ public class ProductService {
             });
             product.getFeatures().addAll(features);
 
-            return save(product);
+            return save(product).get();
         } catch (Exception err) {
             log.error(err.getMessage());
             throw new Exception(err.getMessage());

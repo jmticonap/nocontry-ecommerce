@@ -1,6 +1,7 @@
 package com.nocontry.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,6 +41,7 @@ public class AppUser {
     @Column(unique = true)
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false, updatable = true)
     private String password;
 
@@ -50,6 +52,7 @@ public class AppUser {
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private Collection<Role> roles = new ArrayList<>();
+
 
 }
 

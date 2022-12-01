@@ -20,7 +20,7 @@ import java.util.List;
 @SpringBootApplication
 @OpenAPIDefinition(
         info = @Info(
-                title = "Apply Default Global SecurityScheme in springdoc-openapi",
+                title = "Ecommerce Application",
                 version = "1.0.0"
         ),
         security = {@SecurityRequirement(name = "api_key")}
@@ -69,7 +69,7 @@ public class EcommerceApplication {
             userService.saveUser(juan);
 
             userService.addRoleToUser("donovan@gmail.com", "ROLE_USER");
-            userService.addRoleToUser("mia@gmail.com", "ROLE_MANAGER");
+            userService.addRoleToUser("mia@gmail.com", "ROLE_USER");
             userService.addRoleToUser("will@gmail.com", "ROLE_ADMIN");
             userService.addRoleToUser("jm@gmail.com", "ROLE_SUPER_ADMIN");
             userService.addRoleToUser("jm@gmail.com", "ROLE_ADMIN");
@@ -89,7 +89,7 @@ public class EcommerceApplication {
                             .name("audio")
                             .build()
             );
-            categoryRepository.save(
+            CategoryEntity categoryTech = categoryRepository.save(
                     CategoryEntity.builder()
                             .name("tech")
                             .build()
@@ -100,27 +100,29 @@ public class EcommerceApplication {
                     ProductEntity.builder()
                             .name("Lenovo ideapad 5")
                             .description("Laptop ideapad 5 core i7")
-                            .categoryId(categoryRepository.getByName("tech").getId())
+                            .category(categoryTech)
                             .build()
-            );
+            ).get();
+
             productService.save(
                     ProductEntity.builder()
                             .name("Ipad Prod")
                             .description("Ipad pro gray")
-                            .categoryId(categoryRepository.getByName("tech").getId())
+                            .category(categoryRepository.getByName("tech"))
                             .build()
             );
             productService.save(
                     ProductEntity.builder()
                             .name("Xiaomi Redmi 8")
                             .description("Xiaomi Redmi 8")
-                            .categoryId(categoryRepository.getByName("tech").getId())
+                            .category(categoryRepository.getByName("tech"))
                             .build()
             );
             productService.save(
                     ProductEntity.builder()
                             .name("Mac Book Pro")
                             .description("Mac Book Pro M1 17\"")
+                            .category(categoryRepository.getByName("tech"))
                             .build()
             );
 

@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.nocontry</groupId>
 	<artifactId>ecommerce</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>ecommerce</name>
 	<description>Ecommerce back-end application</description>
 	<properties>

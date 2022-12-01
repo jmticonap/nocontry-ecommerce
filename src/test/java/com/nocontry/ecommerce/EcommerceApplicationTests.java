@@ -13,7 +13,7 @@ import java.util.List;
 @SpringBootTest
 class EcommerceApplicationTests {
 
-    /*@Autowired
+    @Autowired
     private UserRepo userRepo;
 
     @Test
@@ -41,6 +41,6 @@ class EcommerceApplicationTests {
 
         Assertions.assertThat(ada.getId()).isGreaterThan(0);
         Assertions.assertThat(ada.getId()).isNotNull();
-    }*/
+    }
 
 }

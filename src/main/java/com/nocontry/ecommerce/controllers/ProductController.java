@@ -1,13 +1,24 @@
 package com.nocontry.ecommerce.controllers;
 
+import com.nocontry.ecommerce.dto.ProductDto;
+import com.nocontry.ecommerce.entities.CategoryEntity;
 import com.nocontry.ecommerce.entities.ProductEntity;
+import com.nocontry.ecommerce.marshelling.ProductMarsheller;
+import com.nocontry.ecommerce.services.CategoryService;
 import com.nocontry.ecommerce.services.ProductService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/product")
@@ -15,20 +26,51 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProductController {
 
+    @Autowired
     private final ProductService productService;
+    @Autowired
+    private final CategoryService categoryService;
+
+    private URI getUri(Long id) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
+    }
 
     @GetMapping
-    public ResponseEntity<List<ProductEntity>> findAll() {
-        return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<ProductEntity>> findAll(
+            @RequestParam(name = "page", required = false) Integer page,
+            @RequestParam(name = "size", required = false) Integer size) {
+        Pageable pageable = PageRequest.of(page != null ? page : 0, size != null ? size : 20);
+        return ResponseEntity.ok().body(productService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductEntity> findById(@PathVariable(name = "id") Long id) {
-        try {
-            return new ResponseEntity<>(productService.findById(id), HttpStatus.OK);
-        } catch (Exception err) {
-            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
-        }
+    public ResponseEntity<?> findById(@PathVariable(name = "id") Long id) throws Exception {
+        Optional<ProductEntity> product = productService.findById(id);
+
+        if (product.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        URI uri = getUri(product.get().getId());
+
+        return ResponseEntity.created(uri).body(product.get());
+    }
+
+    @GetMapping("/findbycategory/{categoryId}")
+    public ResponseEntity<?> findByCategory(@RequestParam(name = "page", required = false) Integer page,
+                                            @RequestParam(name = "size", required = false) Integer size,
+                                            @PathVariable(name = "categoryId") Long categoryId) {
+        Optional<CategoryEntity> category = categoryService.findById(categoryId);
+
+        if (category.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        Pageable pageable = PageRequest.of(page != null ? page : 0, size != null ? size : 20);
+
+        return ResponseEntity.ok().body(productService.findByCategory(category.get(), pageable));
     }
 
 /*    @PostMapping
@@ -37,10 +79,42 @@ public class ProductController {
     }*/
 
     @PostMapping
-    public ResponseEntity<ProductEntity> save(@RequestBody ProductEntity product) throws Exception {
-        return new ResponseEntity<>(productService.save(product), HttpStatus.OK);
+    public ResponseEntity<?> save(@RequestBody ProductEntity product) throws Exception {
+        Optional<CategoryEntity> category = categoryService.findById(product.getCategory().getId());
+
+        if (category.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        Optional<ProductEntity> newProduct = productService.save(ProductEntity.builder()
+                .name(product.getName())
+                .description(product.getDescription())
+                .images(product.getImages())
+                .category(category.get())
+                .build());
+
+        URI uri = getUri(newProduct.get().getId());
+
+        return ResponseEntity.created(uri).body(newProduct.get());
     }
 
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> setCategory(
+            @PathVariable(name = "id") Long id,
+            @RequestBody Map<String, Long> categoryId) {
+        Optional<CategoryEntity> category = categoryService
+                .findById(categoryId.get("categoryId"));
+        Optional<ProductEntity> product = productService.findById(id);
+
+        if (category.isEmpty())
+            return ResponseEntity.unprocessableEntity().build();
+
+        product.get().setCategory(category.get());
+        Optional<ProductEntity> newProduct = productService.save(product.get());
+
+        URI uri = getUri(newProduct.get().getId());
+        return ResponseEntity.created(uri).body(newProduct.get());
+    }
 
     @PostMapping("/{productId}/add_images")
     public ResponseEntity<ProductEntity> addImages(

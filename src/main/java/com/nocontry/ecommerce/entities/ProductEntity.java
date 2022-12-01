@@ -1,12 +1,13 @@
 package com.nocontry.ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "product")
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
-public class ProductEntity {
+//@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
+public class ProductEntity implements Serializable {
 
     @Id
     @SequenceGenerator(
@@ -34,17 +37,16 @@ public class ProductEntity {
 
     private String description;
 
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "product")
     private List<ProductImagesEntity> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<BuyEntity> buys = new ArrayList<>();
 
-    @Column(name = "category_id")
-    private Long categoryId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "category_id", updatable = true, nullable = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private CategoryEntity category;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
@@ -52,7 +54,7 @@ public class ProductEntity {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "feature_id")
     )
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<FeatureEntity> features = new ArrayList<>();
 
 }
