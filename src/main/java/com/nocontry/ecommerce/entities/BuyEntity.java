@@ -2,6 +2,7 @@ package com.nocontry.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +33,8 @@ public class BuyEntity {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "product_id", updatable = true, nullable = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private ProductEntity product;
 
     @Column(name = "quantity", nullable = false, updatable = false)

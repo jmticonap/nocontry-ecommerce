@@ -31,8 +31,16 @@ public class ProductService {
     private final ProductImagesRepository productImagesRepository;
     private final CategoryRepository categoryRepository;
 
-    public Optional<ProductEntity> save(ProductEntity product) {
-        return Optional.of(productRepository.save(product));
+    public Optional<ProductEntity> save(ProductEntity product) throws Exception {
+        ProductEntity newProduct = productRepository.save(product);
+
+        if(product.getImages() != null && product.getImages().size() > 0)
+            product.getImages().stream().forEach(image -> {
+                image.setProduct(newProduct);
+                productImagesRepository.save(image);
+            });
+
+        return Optional.of(newProduct);
     }
 
     public ProductEntity save(ProductTdo product) throws Exception {

@@ -1,9 +1,11 @@
 package com.nocontry.ecommerce.controllers;
 
 import com.nocontry.ecommerce.dto.ProductDto;
+import com.nocontry.ecommerce.entities.BuyEntity;
 import com.nocontry.ecommerce.entities.CategoryEntity;
 import com.nocontry.ecommerce.entities.ProductEntity;
 import com.nocontry.ecommerce.marshelling.ProductMarsheller;
+import com.nocontry.ecommerce.services.BuyService;
 import com.nocontry.ecommerce.services.CategoryService;
 import com.nocontry.ecommerce.services.ProductService;
 import lombok.AllArgsConstructor;
@@ -30,6 +32,8 @@ public class ProductController {
     private final ProductService productService;
     @Autowired
     private final CategoryService categoryService;
+    @Autowired
+    private final BuyService buyService;
 
     private URI getUri(Long id) {
         return ServletUriComponentsBuilder
@@ -73,11 +77,6 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.findByCategory(category.get(), pageable));
     }
 
-/*    @PostMapping
-    public ResponseEntity<ProductEntity> save(@RequestBody ProductTdo productTdo) throws Exception {
-        return new ResponseEntity<>(productService.save(productTdo), HttpStatus.OK);
-    }*/
-
     @PostMapping
     public ResponseEntity<?> save(@RequestBody ProductEntity product) throws Exception {
         Optional<CategoryEntity> category = categoryService.findById(product.getCategory().getId());
@@ -101,7 +100,7 @@ public class ProductController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> setCategory(
             @PathVariable(name = "id") Long id,
-            @RequestBody Map<String, Long> categoryId) {
+            @RequestBody Map<String, Long> categoryId) throws Exception {
         Optional<CategoryEntity> category = categoryService
                 .findById(categoryId.get("categoryId"));
         Optional<ProductEntity> product = productService.findById(id);
@@ -140,6 +139,17 @@ public class ProductController {
         } catch (Exception err) {
             return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
         }
+    }
+
+
+    @PatchMapping("/buy")
+    public ResponseEntity<?> buy(@RequestBody List<Map<String, Number>> data){
+        List<BuyEntity> buys = buyService.save(data);
+
+        if(buys == null || buys.size() < 1)
+            return ResponseEntity.unprocessableEntity().build();
+
+        return ResponseEntity.ok(buys);
     }
 
 }

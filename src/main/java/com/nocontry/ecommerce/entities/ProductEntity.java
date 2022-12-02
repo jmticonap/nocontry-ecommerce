@@ -37,10 +37,13 @@ public class ProductEntity implements Serializable {
 
     private String description;
 
+    @Builder.Default
+    private Double stock = 0.0;
+
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "product")
     private List<ProductImagesEntity> images = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "product")
     private List<BuyEntity> buys = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
