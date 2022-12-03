@@ -12,10 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @Service
@@ -67,7 +68,7 @@ public class CartService {
         }
         try {
             Float total = activeCart.get().getProducts().stream()
-                    .map(product -> product.getPrice()*product.getQuantity().floatValue())
+                    .map(product -> product.getPrice() * product.getQuantity().floatValue())
                     .reduce(0F, (subtotal, price) -> subtotal + price);
             activeCart.get().setTotal(total);
         } catch (Exception err) {
@@ -77,17 +78,49 @@ public class CartService {
         return activeCart;
     }
 
-    public List<CartDetailEntity> addProducts(String userEmail, List<CartDetailEntity> products) throws Exception {
+    public List<CartDetailEntity> addProducts(
+            String userEmail,
+            List<CartDetailEntity> products) throws Exception {
+        List<CartDetailEntity> result = new ArrayList<>();
         Optional<CartEntity> activeCart = getActive(userEmail);
+        if (activeCart.get().getProducts() != null && activeCart.get().getProducts().size() > 0) {
+            products.stream().forEach(product -> {
+                Optional<CartDetailEntity> productInCart = activeCart.get().getProducts().stream()
+                        .filter(
+                                p -> p.getProduct().getId() == product.getProduct().getId()
+                        )
+                        .findFirst();
 
-        products.stream().forEach(product -> {
-            product.setCart(activeCart.get());
-            CartDetailEntity prod = cartDetailRepository.save(product);
-            product.setProductId(product.getId());
-        });
-        activeCart.get().setProducts(products);
+                if (productInCart.isPresent()) {
+                    productInCart.get().setQuantity(productInCart.get().getQuantity() + product.getQuantity());
+                    CartDetailEntity prdCt = cartDetailRepository.save(productInCart.get());
+                    prdCt.setProductId(product.getId());
+                    result.add(prdCt);
+                } else {
+                    product.setCart(activeCart.get());
+                    CartDetailEntity prdCt = cartDetailRepository.save(product);
+                    prdCt.setProductId(product.getId());
+                    result.add(prdCt);
+                }
+            });
+        } else if (activeCart.get().getProducts() == null) {
+            products.stream().forEach(product -> {
+                product.setCart(activeCart.get());
+                CartDetailEntity prod = cartDetailRepository.save(product);
+                product.setProductId(product.getId());
+                result.add(prod);
+            });
+        }
 
-        return products;
+        activeCart.get().setProducts(result);
+
+        return result;
+    }
+
+    public void deleteProductInCart(Long productId) {
+        Optional<CartDetailEntity> productInCart = cartDetailRepository.findById(productId);
+        cartDetailRepository.delete(productInCart.get());
+        cartDetailRepository.flush();
     }
 
 }

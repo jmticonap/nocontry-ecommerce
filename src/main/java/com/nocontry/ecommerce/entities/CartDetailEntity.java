@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Data
 @Builder
@@ -44,5 +45,5 @@ public class CartDetailEntity {
     private Long productId;
 
     private Float price;
-    
+
 }

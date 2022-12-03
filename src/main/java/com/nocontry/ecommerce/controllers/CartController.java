@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -52,6 +53,12 @@ public class CartController {
             return ResponseEntity.badRequest().build();
 
         return ResponseEntity.ok(products);
+    }
+
+    @DeleteMapping("/product_in_cart/{id}")
+    public ResponseEntity<?> deleteProductInCart(@PathVariable(name = "id") Long id) {
+        cartService.deleteProductInCart(id);
+        return ResponseEntity.ok().build();
     }
 
 }

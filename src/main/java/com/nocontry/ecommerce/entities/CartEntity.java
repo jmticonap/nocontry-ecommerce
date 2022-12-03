@@ -53,5 +53,14 @@ public class CartEntity {
 
     @OneToMany(mappedBy = "cart", cascade = {CascadeType.ALL})
     private List<CartDetailEntity> products = new ArrayList<>();
-    
+
+    @Override
+    public String toString() {
+        return "CartEntity{" +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                ", isPurchased=" + isPurchased +
+                ", total=" + total +
+                '}';
+    }
 }

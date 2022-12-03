@@ -25,15 +25,23 @@ public class DeliverDataEntity {
             generator = "deliver_id_sequence"
     )
     private Long id;
+
     @Column(nullable = true)
     private String country;
+
     private String state;
+
     private String city;
+
     private String street;
+
     @Column(name = "postal_code")
     private String postalCode;
+
     @OneToOne
     @JoinColumn(name = "cart_id", nullable = false, updatable = false)
     private CartEntity cart;
+
+
 
 }
