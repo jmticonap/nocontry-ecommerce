@@ -16,6 +16,12 @@
 	<properties>
 		<java.version>11</java.version>
 	</properties>
+	<distributionManagement>
+		<repository>
+			<id>nocontry-ecommerce</id>
+			<url>http://nocontry-ecommerce</url>
+		</repository>
+	</distributionManagement>
 	<dependencies>
 
 		<dependency>
