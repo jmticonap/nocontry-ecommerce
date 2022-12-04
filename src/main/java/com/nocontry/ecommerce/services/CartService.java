@@ -3,8 +3,10 @@ package com.nocontry.ecommerce.services;
 import com.nocontry.ecommerce.entities.AppUser;
 import com.nocontry.ecommerce.entities.CartDetailEntity;
 import com.nocontry.ecommerce.entities.CartEntity;
+import com.nocontry.ecommerce.entities.ProductEntity;
 import com.nocontry.ecommerce.repositories.CartDetailRepository;
 import com.nocontry.ecommerce.repositories.CartRepository;
+import com.nocontry.ecommerce.repositories.ProductRepository;
 import com.nocontry.ecommerce.repositories.UserRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
@@ -23,12 +22,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AllArgsConstructor
 public class CartService {
 
-    @Autowired
-    private CartRepository cartRepository;
-    @Autowired
-    private UserRepo userRepo;
-    @Autowired
-    private CartDetailRepository cartDetailRepository;
+    @Autowired private CartRepository cartRepository;
+    @Autowired private UserRepo userRepo;
+    @Autowired private CartDetailRepository cartDetailRepository;
+    @Autowired private ProductRepository productRepository;
 
     public Optional<CartEntity> save(CartEntity cart) {
         CartEntity newCart = cartRepository.save(cart);
@@ -121,6 +118,39 @@ public class CartService {
         Optional<CartDetailEntity> productInCart = cartDetailRepository.findById(productId);
         cartDetailRepository.delete(productInCart.get());
         cartDetailRepository.flush();
+    }
+
+    public void updateProductInCart(Long productInCartId, Map<String, Number> changes) throws Exception {
+        Optional<CartDetailEntity> productInCart = cartDetailRepository.findById(productInCartId);
+
+        if(productInCart.isEmpty())
+            throw new Exception("This product is not in the active cart.");
+
+        if(changes.get("quantity") != null){
+            productInCart.get().setQuantity(changes.get("quantity").floatValue());
+        }
+        if(changes.get("price") != null){
+            productInCart.get().setPrice(changes.get("price").floatValue());
+        }
+
+        cartDetailRepository.save(productInCart.get());
+    }
+
+    public Optional<CartEntity> purchaseCart(String userEmail) throws Exception {
+        Optional<CartEntity> activeCart = getActive(userEmail);
+
+        activeCart.get().getProducts().stream().forEach(product -> {
+            Optional<ProductEntity> productEntity = productRepository.findById(product.getProduct().getId());
+            if(productEntity.isPresent()){
+                productEntity.get().setStock(productEntity.get().getStock()-product.getQuantity());
+                productRepository.save(productEntity.get());
+            }
+        });
+
+        activeCart.get().setIsPurchased(true);
+        cartRepository.save(activeCart.get());
+
+        return activeCart;
     }
 
 }

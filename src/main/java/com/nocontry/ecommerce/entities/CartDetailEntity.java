@@ -34,7 +34,7 @@ public class CartDetailEntity {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private CartEntity cart;
 
-    private Double quantity;
+    private Float quantity;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = true, updatable = true)

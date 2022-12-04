@@ -7,10 +7,12 @@ import com.nocontry.ecommerce.services.CartService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -48,7 +50,7 @@ public class CartController {
                 .getPrincipal().toString();
         products = cartService.addProducts(userEmail, products);
 
-        if(products == null || products.size() < 1)
+        if(products == null || products.size() <= 0)
             return ResponseEntity.badRequest().build();
 
         return ResponseEntity.ok(products);
@@ -58,6 +60,29 @@ public class CartController {
     public ResponseEntity<?> deleteProductInCart(@PathVariable(name = "id") Long id) {
         cartService.deleteProductInCart(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/product_in_cart/{id}")
+    public ResponseEntity<?> updateProductInCart(
+            @PathVariable(name= "id") Long id,
+            @RequestBody Map<String, Number> changes) throws Exception{
+        cartService.updateProductInCart(id, changes);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/purchase")
+    public ResponseEntity<?> purchase(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws Exception {
+        String userEmail = TokenUtils
+                .getAuthentication(
+                        token.replace("Bearer ", "")
+                )
+                .getPrincipal().toString();
+        Optional<CartEntity> cart = cartService.purchaseCart(userEmail);
+
+        if(cart.isEmpty())
+            ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+
+        return ResponseEntity.ok(cart.get());
     }
 
 }
