@@ -58,9 +58,7 @@ public class ProductController {
         if (product.isEmpty())
             return ResponseEntity.notFound().build();
 
-        URI uri = getUri(product.get().getId());
-
-        return ResponseEntity.created(uri).body(product.get());
+        return ResponseEntity.ok(product.get());
     }
 
     @GetMapping("/findbycategory/{categoryId}")
@@ -79,7 +77,13 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody ProductEntity product) throws Exception {
-        Optional<ProductEntity> newProduct = productService.save(product);
+        Optional<ProductEntity> newProduct = null;
+
+        try {
+            newProduct = productService.save(product);
+        } catch (Exception err) {
+            return ResponseEntity.unprocessableEntity().body(err.getMessage());
+        }
 
         URI uri = getUri(newProduct.get().getId());
 

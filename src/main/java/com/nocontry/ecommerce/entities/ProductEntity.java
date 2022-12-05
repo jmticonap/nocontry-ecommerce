@@ -33,6 +33,7 @@ public class ProductEntity implements Serializable {
     )
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     private String description;

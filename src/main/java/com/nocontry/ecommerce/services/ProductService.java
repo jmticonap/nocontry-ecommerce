@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,8 @@ public class ProductService {
     }
 
     public Optional<ProductEntity> save(ProductEntity product) throws Exception {
+        /*if(product.getId() != null)
+            throw new Exception("The product exist, for update fields values user <<update>>");*/
         try {
             Optional<CategoryEntity> category = categoryRepository.findById(product.getCategory().getId());
         } catch (Exception err) {
@@ -48,7 +51,14 @@ public class ProductService {
         }
 
         //********************************************************
-        ProductEntity newProduct = productRepository.save(product);
+        ProductEntity newProduct = null;
+        try{
+            newProduct = productRepository.save(product);
+        } catch (Exception err) {
+            log.error(err.getMessage());
+            throw new Exception(err.getMessage());
+        }
+
 
         if (product.getPrice() != null && product.getPrice() > 0) {
             PriceEntity activePrice = priceRepository.findOneByProductAndIsActiveTrue(product);
@@ -67,11 +77,13 @@ public class ProductService {
             }
         }
 
-        if (product.getImages() != null && product.getImages().size() > 0)
+        if (product.getImages() != null && product.getImages().size() > 0) {
+            ProductEntity finalNewProduct = newProduct;
             product.getImages().stream().forEach(image -> {
-                image.setProduct(newProduct);
+                image.setProduct(finalNewProduct);
                 productImagesRepository.save(image);
             });
+        }
 
         return Optional.of(newProduct);
     }
