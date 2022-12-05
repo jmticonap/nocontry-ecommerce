@@ -10,6 +10,8 @@ public interface PriceRepository extends JpaRepository<PriceEntity, Long> {
 
     List<PriceEntity> findByProduct(ProductEntity product);
 
+    PriceEntity findOneByProductAndIsActiveTrue(ProductEntity product);
+
     PriceEntity getByProductAndIsActiveTrue(ProductEntity product);
 
 }

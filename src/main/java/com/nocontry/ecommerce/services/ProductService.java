@@ -1,17 +1,12 @@
 package com.nocontry.ecommerce.services;
 
-import com.nocontry.ecommerce.entities.CategoryEntity;
-import com.nocontry.ecommerce.entities.FeatureEntity;
-import com.nocontry.ecommerce.entities.ProductEntity;
-import com.nocontry.ecommerce.entities.ProductImagesEntity;
-import com.nocontry.ecommerce.repositories.CategoryRepository;
-import com.nocontry.ecommerce.repositories.FeatureRepository;
-import com.nocontry.ecommerce.repositories.ProductImagesRepository;
-import com.nocontry.ecommerce.repositories.ProductRepository;
+import com.nocontry.ecommerce.entities.*;
+import com.nocontry.ecommerce.repositories.*;
 import com.nocontry.ecommerce.dto.ProductTdo;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,15 +21,53 @@ import java.util.Optional;
 @Slf4j
 public class ProductService {
 
+    @Autowired
     private final ProductRepository productRepository;
+    @Autowired
     private final FeatureRepository featureRepository;
+    @Autowired
     private final ProductImagesRepository productImagesRepository;
+    @Autowired
     private final CategoryRepository categoryRepository;
+    @Autowired
+    private final PriceRepository priceRepository;
+
+
+    private void putActivePrice(ProductEntity product) {
+        PriceEntity activePrice = priceRepository.findOneByProductAndIsActiveTrue(product);
+        if (activePrice != null && activePrice.getValue() > 0)
+            product.setPrice(activePrice.getValue());
+    }
 
     public Optional<ProductEntity> save(ProductEntity product) throws Exception {
+        try {
+            Optional<CategoryEntity> category = categoryRepository.findById(product.getCategory().getId());
+        } catch (Exception err) {
+            log.error("Category not found for product: {}",product.getName());
+            product.setCategory(null);
+        }
+
+        //********************************************************
         ProductEntity newProduct = productRepository.save(product);
 
-        if(product.getImages() != null && product.getImages().size() > 0)
+        if (product.getPrice() != null && product.getPrice() > 0) {
+            PriceEntity activePrice = priceRepository.findOneByProductAndIsActiveTrue(product);
+            if (activePrice != null && activePrice.getValue() != product.getPrice()) {
+                activePrice.setIsActive(false);
+                priceRepository.save(activePrice);
+                priceRepository.save(PriceEntity.builder()
+                        .value(product.getPrice())
+                        .product(newProduct)
+                        .build());
+            } else {
+                priceRepository.save(PriceEntity.builder()
+                        .value(product.getPrice())
+                        .product(product)
+                        .build());
+            }
+        }
+
+        if (product.getImages() != null && product.getImages().size() > 0)
             product.getImages().stream().forEach(image -> {
                 image.setProduct(newProduct);
                 productImagesRepository.save(image);
@@ -53,16 +86,20 @@ public class ProductService {
 
     public List<ProductEntity> findAll(Pageable pageable) {
         List<ProductEntity> products = productRepository.findAll(pageable).toList();
-
+        products.stream().forEach(product -> putActivePrice(product));
         return products;
     }
 
     public Optional<ProductEntity> findById(Long id) {
-        return productRepository.findById(id);
+        Optional<ProductEntity> product = productRepository.findById(id);
+        putActivePrice(product.get());
+        return product;
     }
 
-    public List<ProductEntity> findByCategory(CategoryEntity category, Pageable pageable){
-        return productRepository.findByCategory(category, pageable);
+    public List<ProductEntity> findByCategory(CategoryEntity category, Pageable pageable) {
+        List<ProductEntity> products = productRepository.findByCategory(category, pageable);
+        products.stream().forEach(product -> putActivePrice(product));
+        return products;
     }
 
     public void delete(ProductEntity product) {

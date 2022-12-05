@@ -76,31 +76,24 @@ public class EcommerceApplication {
             userService.addRoleToUser("jm@gmail.com", "ROLE_MANAGER");
             userService.addRoleToUser("jm@gmail.com", "ROLE_USER");
 
-            /**
-             *
-             */
-            categoryRepository.save(
-                    CategoryEntity.builder()
-                            .name("Generic")
-                            .build()
-            );
-            categoryRepository.save(
-                    CategoryEntity.builder()
-                            .name("audio")
-                            .build()
-            );
-            CategoryEntity categoryTech = categoryRepository.save(
-                    CategoryEntity.builder()
-                            .name("tech")
-                            .build()
-            );
 
+            CategoryEntity categoryLaptop = categoryRepository.save(CategoryEntity.builder().name("Laptops").build());
+            categoryRepository.save(CategoryEntity.builder().name("Desktops").build());
+            categoryRepository.save(CategoryEntity.builder().name("Smartphones").build());
+            categoryRepository.save(CategoryEntity.builder().name("Tablets").build());
+            categoryRepository.save(CategoryEntity.builder().name("Audio").build());
+            categoryRepository.save(CategoryEntity.builder().name("Peripherals").build());
+            categoryRepository.save(CategoryEntity.builder().name("Storage").build());
+            categoryRepository.save(CategoryEntity.builder().name("Monitors").build());
+            categoryRepository.save(CategoryEntity.builder().name("Printers").build());
+            categoryRepository.save(CategoryEntity.builder().name("Scanners").build());
 
             ProductEntity product1 = productService.save(
                     ProductEntity.builder()
                             .name("Lenovo ideapad 5")
                             .description("Laptop ideapad 5 core i7")
-                            .category(categoryTech)
+                            .category(CategoryEntity.builder().id(1L).build())
+                            .price(870F)
                             .build()
             ).get();
 
@@ -108,21 +101,24 @@ public class EcommerceApplication {
                     ProductEntity.builder()
                             .name("Ipad Prod")
                             .description("Ipad pro gray")
-                            .category(categoryRepository.getByName("tech"))
+                            .category(categoryRepository.getByName("Tablets"))
+                            .price(450F)
                             .build()
             );
             productService.save(
                     ProductEntity.builder()
                             .name("Xiaomi Redmi 8")
                             .description("Xiaomi Redmi 8")
-                            .category(categoryRepository.getByName("tech"))
+                            .category(categoryRepository.getByName("Tablets"))
+                            .price(220F)
                             .build()
             );
             productService.save(
                     ProductEntity.builder()
                             .name("Mac Book Pro")
                             .description("Mac Book Pro M1 17\"")
-                            .category(categoryRepository.getByName("tech"))
+                            .category(categoryRepository.getByName("Laptops"))
+                            .price(1800F)
                             .build()
             );
 

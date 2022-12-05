@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "category")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-public class CategoryEntity implements Serializable {
+public class CategoryEntity {
 
     @Id
     @SequenceGenerator(
@@ -36,7 +36,7 @@ public class CategoryEntity implements Serializable {
     @JsonBackReference
     private CategoryEntity parent;*/
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "category")
     private List<ProductEntity> products = new ArrayList<>();
 
 }

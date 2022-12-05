@@ -79,17 +79,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody ProductEntity product) throws Exception {
-        Optional<CategoryEntity> category = categoryService.findById(product.getCategory().getId());
-
-        if (category.isEmpty())
-            return ResponseEntity.notFound().build();
-
-        Optional<ProductEntity> newProduct = productService.save(ProductEntity.builder()
-                .name(product.getName())
-                .description(product.getDescription())
-                .images(product.getImages())
-                .category(category.get())
-                .build());
+        Optional<ProductEntity> newProduct = productService.save(product);
 
         URI uri = getUri(newProduct.get().getId());
 

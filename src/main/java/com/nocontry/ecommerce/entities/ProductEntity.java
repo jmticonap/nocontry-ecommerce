@@ -40,14 +40,19 @@ public class ProductEntity implements Serializable {
     @Builder.Default
     private Double stock = 0.0;
 
+    @Transient
+    @Builder.Default
+    private Float price = 0F;
+
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "product")
     private List<ProductImagesEntity> images = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "product")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<BuyEntity> buys = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "category_id", updatable = true, nullable = true)
+    @ManyToOne
+    //@JoinColumn(name = "category_id", updatable = true, nullable = true)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private CategoryEntity category;
 
