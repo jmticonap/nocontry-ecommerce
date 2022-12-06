@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -96,8 +97,8 @@ public class ProductService {
                 .build()).get();
     }
 
-    public List<ProductEntity> findAll(Pageable pageable) {
-        List<ProductEntity> products = productRepository.findAll(pageable).toList();
+    public Page<ProductEntity> findAll(Pageable pageable) {
+        Page<ProductEntity> products = productRepository.findAll(pageable);
         products.stream().forEach(product -> putActivePrice(product));
         return products;
     }

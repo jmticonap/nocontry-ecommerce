@@ -36,6 +36,7 @@ public class ProductEntity implements Serializable {
     @Column(unique = true)
     private String name;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Builder.Default

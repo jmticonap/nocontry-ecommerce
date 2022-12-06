@@ -79,10 +79,6 @@ public class TokenUtils {
             String email = claims.getSubject();
 
             AppUser user = userService.getUser(email);
-            log.info("=============================================================================================");
-            log.info(user.toString());
-            log.info("=============================================================================================");
-
 
             return new UsernamePasswordAuthenticationToken(email, null, user.getRoles());
         } catch (JwtException e){

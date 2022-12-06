@@ -31,7 +31,7 @@ public class EcommerceApplication {
         SpringApplication.run(EcommerceApplication.class, args);
     }
 
-    @Bean
+    //@Bean
     CommandLineRunner run(
             UserService userService,
             CategoryRepository categoryRepository,

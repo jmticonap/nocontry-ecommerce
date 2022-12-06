@@ -10,8 +10,12 @@ import com.nocontry.ecommerce.services.CategoryService;
 import com.nocontry.ecommerce.services.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,11 +48,11 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductEntity>> findAll(
-            @RequestParam(name = "page", required = false) Integer page,
-            @RequestParam(name = "size", required = false) Integer size) {
-        Pageable pageable = PageRequest.of(page != null ? page : 0, size != null ? size : 20);
-        return ResponseEntity.ok().body(productService.findAll(pageable));
+    public ResponseEntity<PagedModel<EntityModel<ProductEntity>>> findAll(
+            Pageable pageable,
+            PagedResourcesAssembler<ProductEntity> assembler) {
+        Page<ProductEntity> products = productService.findAll(pageable);
+        return ResponseEntity.ok().body(assembler.toModel(products));
     }
 
     @GetMapping("/{id}")
