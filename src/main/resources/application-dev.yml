@@ -1,18 +1,19 @@
 server:
-  port: 80
+  port: 8181
+
 
 spring:
 
   application:
-    name: "ecommerce"
+    name: ecommerce
 
   datasource:
     username: postgres
     password: password
-    url: jdbc:postgresql://34.68.138.242:5432/ecommerce_db
+    url: jdbc:postgresql://localhost:5432/ecommerce_db
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update #create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
